@@ -3,7 +3,6 @@ const auth = require('../middlewares/auth');
 const { createUser, login } = require('../controllers/users');
 const { ERROR_CODE_NOT_FOUND } = require('../utils/utils');
 
-
 const userRouter = require('./user');
 
 router.use('/users', userRouter);
