@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(helmet());
 
 mongoose
-  .connect('mongodb://localhost:27017/bitfilmsdb')
+  .connect('mongodb://127.0.0.1:27017/bitfilmsdb')
   .then(() => console.log('Connected'))
   .catch((error) => console.log(`Error during connection ${error}`));
 
