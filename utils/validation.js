@@ -2,7 +2,7 @@ const { celebrate, Joi } = require('celebrate');
 
 const LINK_REGEXP = /https?:\/\/(www\.)?\w+[-.~:/?#[\]@!$&'()*+,;=]*#?/;
 
-module.exports.validationSignin = celebrate({
+module.exports.validationSignIn = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
@@ -12,41 +12,36 @@ module.exports.validationSignin = celebrate({
 module.exports.validationSignUp = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(LINK_REGEXP),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-  }),
-});
-
-module.exports.validationUserId = celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().required().length(24).hex(),
   }),
 });
 
 module.exports.validationUpdateProfile = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    email: Joi.string().min(2).email(),
   }),
 });
 
-module.exports.validationUpdateAvatar = celebrate({
+module.exports.validationCreateMovie = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(LINK_REGEXP),
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().pattern(LINK_REGEXP),
+    trailerLink: Joi.string().required().pattern(LINK_REGEXP),
+    thumbnail: Joi.string().required().pattern(LINK_REGEXP),
+    movieId: Joi.number().required(),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
   }),
 });
 
-module.exports.validationCreateCard = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(LINK_REGEXP),
-  }),
-});
-
-module.exports.validationCardId = celebrate({
+module.exports.validationMovieId = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().length(24).hex(),
+    movieId: Joi.string().required().length(24).hex(),
   }),
 });

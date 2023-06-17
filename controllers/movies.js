@@ -7,7 +7,7 @@ const ForbiddenError = require('../error/forbiddenError');
 module.exports.getAllSavedMovies = (req, res, next) => {
   Movie.find({})
     .populate('owner')
-    .then((movie) => res.send({ data: movie }))
+    .then((movies) => res.send({ data: movies }))
     .catch(next);
 };
 
@@ -42,10 +42,16 @@ module.exports.createMovie = (req, res, next) => {
     nameRU,
     nameEN,
   })
-    .then((movie) => res.status(201).send({ data: movie })).catch(next);
+    .then((movie) => res.status(201).send({ data: movie }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestError('Некорректные данные фильма'));
+      }
+      return next(err);
+    });
 };
 
-module.exports.deleteCard = (req, res, next) => {
+module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .orFail(new NotFoundError('Такого фильма не существует'))
     .then((movie) => {
@@ -56,7 +62,7 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequestError('Неверная информация карточки'));
+        return next(new BadRequestError('Некорректно введены данные о фильме'));
       }
       return next(err);
     });

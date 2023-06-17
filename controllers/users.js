@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+
 const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -10,24 +11,6 @@ const AuthenticationError = require('../error/authenticationError');
 const { NODE_ENV, SECRET_KEY } = process.env;
 
 const User = require('../models/user');
-
-const getUser = (req, res, next) => {
-  User.findById(req.user._id).orFail(new NotFoundError('Такого пользователя не существует'))
-    .then((user) => res.send(user))
-    .catch((err) => next(err));
-};
-
-const updateProfile = (req, res, next) => {
-  const { name, email } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
-    .orFail().then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Такого пользователя не существует'));
-      }
-      return next(err);
-    });
-};
 
 const createUser = (req, res, next) => {
   const { email, name, password } = req.body;
@@ -46,15 +29,43 @@ const createUser = (req, res, next) => {
           if (err.code === 11000) {
             next(new ConflictError('Пользователь с таким ID существует'));
           } else if (err.name === 'ValidationError') {
-            next(
+            return next(
               new BadRequestError('Неверная информация пользователя'),
             );
           } else {
-            next(err);
+            return next(err);
           }
         });
+    });
+};
+
+const getUser = (req, res, next) => {
+  User.findOne({ _id: req.user._id })
+    .then((user) => {
+      if (!user) {
+        return next(new NotFoundError('Пользователь с таким id не найден'));
+      }
+      res.send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Некорректные данные пользователя'));
+      }
+      return next(err);
+    });
+};
+
+const updateProfile = (req, res, next) => {
+  const { name, email } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
+    .orFail()
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.name === 'DocumentNotFoundError') {
+        return next(new NotFoundError('Такого пользователя не существует'));
+      }
+      return next(err);
+    });
 };
 
 const login = (req, res, next) => {
