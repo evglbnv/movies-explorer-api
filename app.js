@@ -15,10 +15,10 @@ const { PORT = 3000 } = process.env;
 const allowedCors = [
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://evglbnv.nomoredomains.rocks',
-  'http://evglbnv.nomoredomains.rocks',
-  'https://api.evglbnv.nomoredomains.rocks/',
-  'http://api.evglbnv.nomoredomains.rocks/',
+  'https://evglbnvdiploma.nomoredomains.rocks',
+  'http://evglbnvdiploma.nomoredomains.rocks',
+  'https://api.evglbnvdiploma.nomoredomains.rocks/',
+  'http://api.evglbnvdiploma.nomoredomains.rocks/',
 ];
 
 const app = express();
