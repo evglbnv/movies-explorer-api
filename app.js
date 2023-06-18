@@ -35,9 +35,9 @@ mongoose
   .catch((error) => console.log(`Error during connection ${error}`));
 
 app.use(requestLogger);
+app.use(limiter);
 app.use('/', router);
 app.use(errorLogger);
-app.use(limiter);
 app.use(errors());
 app.use(handleErrors);
 

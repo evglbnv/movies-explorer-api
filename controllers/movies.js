@@ -7,7 +7,10 @@ const ForbiddenError = require('../error/forbiddenError');
 module.exports.getAllSavedMovies = (req, res, next) => {
   Movie.find({})
     .populate('owner')
-    .then((movies) => res.send({ data: movies }))
+    .then((movies) => {
+      const userMovies = movies.filter((movie) => movie.owner.id === req.user._id);
+      res.send({ data: userMovies });
+    })
     .catch(next);
 };
 
