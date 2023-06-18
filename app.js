@@ -17,8 +17,8 @@ const allowedCors = [
   'http://localhost:3001',
   'https://evglbnvdiploma.nomoredomains.rocks',
   'http://evglbnvdiploma.nomoredomains.rocks',
-  'https://api.evglbnvdiploma.nomoredomains.rocks/',
-  'http://api.evglbnvdiploma.nomoredomains.rocks/',
+  'https://api.evglbnvdiploma.nomoredomains.rocks',
+  'http://api.evglbnvdiploma.nomoredomains.rocks',
 ];
 
 const app = express();
