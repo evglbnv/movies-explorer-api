@@ -8,7 +8,7 @@ const BadRequestError = require('../error/badRequest');
 const ConflictError = require('../error/conflictError');
 const AuthenticationError = require('../error/authenticationError');
 
-const { NODE_ENV, SECRET_KEY } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const User = require('../models/user');
 
@@ -94,7 +94,7 @@ const login = (req, res, next) => {
       const matched = bcrypt.compare(password, user.password);
       if (!matched) {
         return Promise.reject(new AuthenticationError('Неправильные почта или пароль'));
-      } const token = jsonwebtoken.sign({ _id: user._id }, NODE_ENV === 'production' ? SECRET_KEY : 'dev-secret', { expiresIn: '7d' });
+      } const token = jsonwebtoken.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.send({ token });
     })
     .catch((err) => next(err));
