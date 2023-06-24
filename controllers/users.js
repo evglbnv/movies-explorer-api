@@ -56,19 +56,28 @@ const getUser = (req, res, next) => {
 };
 
 const updateProfile = (req, res, next) => {
-  const { name, email } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { name, email },
-    { new: true, runValidators: true },
-  )
-    .orFail()
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Такого пользователя не существует'));
+  const { email, name } = req.body;
+
+  User.findByIdAndUpdate(req.user._id, { email, name }, {
+    new: true,
+    runValidators: true,
+  })
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь с таким id не найден');
       }
-      return next(err);
+      return res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else if (err.name === 'CastError') {
+        next(new BadRequestError('Некорректный id пользователя'));
+      } else if (err.code === 11000) {
+        next(new ConflictError('При регистрации указан email, который уже существует на сервере'));
+      } else {
+        next(err);
+      }
     });
 };
 
