@@ -10,7 +10,7 @@ const { handleErrors } = require('./middlewares/handleErrors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const router = require('./routes/index');
 
-const { PORT = 3000 } = process.env;
+const {PORT, DB_ADDRESS} = require('./utils/config')
 
 const allowedCors = [
   'http://localhost:3000',
@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(helmet());
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/bitfilmsdb')
+  .connect(DB_ADDRESS)
   .then(() => console.log('Connected'))
   .catch((error) => console.log(`Error during connection ${error}`));
 
