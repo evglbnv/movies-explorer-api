@@ -10,7 +10,7 @@ const { handleErrors } = require('./middlewares/handleErrors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const router = require('./routes/index');
 
-const {PORT, DB_ADDRESS} = require('./utils/config')
+const { PORT, DB_ADDRESS } = require('./utils/config');
 
 const allowedCors = [
   'http://localhost:3000',
